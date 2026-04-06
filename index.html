@@ -815,20 +815,53 @@
     // Subject line shared by both emails
     const emailSubject = `[${ref}] pataPC Build Request — ${requestDateShort}`;
 
+    // ── Full request summary block — use {{request_summary}} in both EmailJS templates ──
+    const requestSummary =
+`===================================
+  pataPC — BUILD REQUEST SUMMARY
+===================================
+
+Reference No.   : ${ref}
+Date & Time     : ${requestDateTime}
+
+-----------------------------------
+  BUILD DETAILS
+-----------------------------------
+Budget          : ${budgetStr}
+Intended Use    : ${useList}
+Color Preference: ${colorPref || 'Not specified'}
+Type of Build   : ${buildType}
+Peripherals     : ${peripherals}
+Existing Parts  : ${existing || 'None'}
+
+-----------------------------------
+  CONTACT & PAYMENT
+-----------------------------------
+Name            : ${customerName}
+Phone           : +63${phone}
+Email           : ${email}
+Mode of Payment : ${payment}
+
+===================================
+  This is a request, not a confirmed order.
+  pataPC will follow up within 24-48 hours.
+===================================`;
+
     const sharedParams = {
-      reference_number: ref,
-      request_datetime: requestDateTime,
-      subject:          emailSubject,
-      name:             customerName,
-      budget:           budgetStr,
-      intended_use:     useList,
-      color_preference: colorPref || 'Not specified',
-      build_type:       buildType,
-      peripherals:      peripherals,
-      existing_parts:   existing || 'None',
-      phone:            `+63${phone}`,
-      mode_of_payment:  payment,
-      customer_email:   email,
+      reference_number:  ref,
+      request_datetime:  requestDateTime,
+      subject:           emailSubject,
+      name:              customerName,
+      budget:            budgetStr,
+      intended_use:      useList,
+      color_preference:  colorPref || 'Not specified',
+      build_type:        buildType,
+      peripherals:       peripherals,
+      existing_parts:    existing || 'None',
+      phone:             `+63${phone}`,
+      mode_of_payment:   payment,
+      customer_email:    email,
+      request_summary:   requestSummary,
     };
 
     try {
