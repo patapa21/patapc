@@ -806,9 +806,20 @@
       hour12: true
     }) + ' (PHT)';
 
+    // Short date for subject line e.g. "2026-04-07"
+    const requestDateShort = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' });
+
+    // Derive display name from email — everything before the @
+    const customerName = email.split('@')[0];
+
+    // Subject line shared by both emails
+    const emailSubject = `[${ref}] pataPC Build Request — ${requestDateShort}`;
+
     const sharedParams = {
       reference_number: ref,
       request_datetime: requestDateTime,
+      subject:          emailSubject,
+      name:             customerName,
       budget:           budgetStr,
       intended_use:     useList,
       color_preference: colorPref || 'Not specified',
@@ -822,17 +833,17 @@
 
     try {
       // 1️⃣  Notify pataPC (internal) — goes to YOUR inbox
-      await emailjs.send('YOUR_SERVICE_ID', 'YOUR_INTERNAL_TEMPLATE_ID', {
+      await emailjs.send('service_ivpp2wg', 'template_tcx4jbh', {
         ...sharedParams,
         reply_to:   email,
         from_email: email,
       });
 
       // 2️⃣  Auto-confirmation to the customer — sent FROM pataPC email
-      await emailjs.send('YOUR_SERVICE_ID', 'YOUR_CONFIRMATION_TEMPLATE_ID', {
+      await emailjs.send('service_ivpp2wg', 'template_r2lnzi5', {
         ...sharedParams,
         to_email:   email,
-        reply_to:   'your-patapc-email@gmail.com', // ← replace with your actual pataPC email
+        reply_to:   'patapcbuild@gmail.com', // ← replace with your actual pataPC email
       });
 
       document.getElementById('refNumber').textContent = ref;
